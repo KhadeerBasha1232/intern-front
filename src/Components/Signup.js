@@ -154,6 +154,9 @@ export default function SignUp(props) {
                                 />
 
                             </Grid>
+                            <Grid item xs={20} className='mx-1'>
+                                Upload Your Resume :
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                 fullWidth
