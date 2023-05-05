@@ -28,20 +28,27 @@ const theme = createTheme();
 export default function SignUp(props) {
     const [resume,setResume] = useState("")
     const location = useLocation()
-    
+    const formRef = React.useRef(null);
     const [credentials, setCredetials] = useState({ name: "", email: "", password: "", cpassword: "" })
-    
+    const maxFileSize = 100 * 1024;
     function covertToBase64(e) {
-        console.log(e);
         var reader = new FileReader();
+        const file = e.target.files[0];
         reader.readAsDataURL(e.target.files[0]);
+        if (file.size > maxFileSize && file.type !== 'application/pdf') {
+            props.showAlert("Files Size Exceeds 100 Kb or Selected Type Is Not a PDF", "danger")
+            e.target.value = null;
+            setResume(null)
+          }
+          else{
+            
         reader.onload = () => {
             console.log(reader.result); //base64encoded string  
             setResume(reader.result);
         };
         reader.onerror = error => {
             console.log("Error: ", error);
-        };
+        };}
     }
     let history = useNavigate();
 
@@ -103,7 +110,7 @@ export default function SignUp(props) {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" ref={formRef} onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <TextField
@@ -160,7 +167,7 @@ export default function SignUp(props) {
                             <Grid item xs={12}>
                                 <TextField
                                 fullWidth
-                                    accept="file"
+                                accept="application/pdf"
                                     type="file"
                                     name="resume"
                                     onChange={covertToBase64}
